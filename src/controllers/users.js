@@ -15,22 +15,28 @@ exports.create = (req, res) => {
     });
   }
   User.findOne({ where: { phone_number } })
-    .then(() => {
-      res.status(400).send({
-        message: "Phone number already exists!",
-      });
+    .then((user) => {
+      if (user)
+        res.status(400).send({
+          message: "Phone number already exists!",
+        });
+      else {
+        User.create({ name, phone_number })
+          .then((data) => {
+            res.send(data);
+          })
+          .catch((err) => {
+            res.status(500).send({
+              message:
+                err.message || "Some error occurred while creating the User.",
+            });
+          });
+      }
     })
     .catch(() => {
-      User.create({ name, phone_number })
-        .then((data) => {
-          res.send(data);
-        })
-        .catch((err) => {
-          res.status(500).send({
-            message:
-              err.message || "Some error occurred while creating the User.",
-          });
-        });
+      res.status(500).send({
+        message: err.message || "Some error occurred while finding User.",
+      });
     });
 };
 
