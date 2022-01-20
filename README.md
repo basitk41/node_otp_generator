@@ -1,4 +1,4 @@
-# product_box
+# OTP Generator
 
 ## Setup
 clone repo <br />
